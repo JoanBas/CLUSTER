@@ -14,7 +14,7 @@ from copy import deepcopy
 
 
 class MODEL():
-    def __init__(self, time=0, increased_duration_factor=1,event_kinds=['views', 'comments'],dataset_name="handson3", mu_increase_factor=1.):
+    def __init__(self, time=0, increased_duration_factor=1,event_kinds=['views', 'comments'],dataset_name="handson3", mu_increase_factor=[1.,1.]):
         ######_INITIALIZATION PARAMETERS_#############
 
         self.M = 2
@@ -23,7 +23,7 @@ class MODEL():
         self.dataset_name=dataset_name
         self.reference_stop_event = self.event_kinds.index(self.event_kind_sess_len_reference)  # index of the event used to decid when to stop simulating an event
         self.use_time=time
-        self.mu_increase_factor=mu_increase_factor
+        self.mu_increase_factor=np.asarray(mu_increase_factor)
 
 
         ##############################################
@@ -139,7 +139,7 @@ class MODEL():
         n=random.choice(self.sess_len_dist)
         if n==0: return [np.empty([0]),np.empty([0])], t
         alpha, beta, mu = deepcopy(self.in_sess)
-        mu[0]*=self.mu_increase_factor
+        mu*=self.mu_increase_factor
         session = simulate_multi_hawkes(alpha, beta, mu, n, reference_stop_event='none', time=self.use_time)#self.reference_stop_event)
         session[0]+=t
         session[1]+=t
@@ -156,7 +156,7 @@ class MODEL():
 
 if __name__ == "__main__":
 
-    a=MODEL(time=0, increased_duration_factor=1.,dataset_name='handson3',event_kinds=["views","edits"])
+    a=MODEL(time=0, increased_duration_factor=1., dataset_name='handson3',event_kinds=["views","tools"])
     ne=[]
     for i in range(20):
         ne. append(a.simulate())
@@ -166,3 +166,4 @@ if __name__ == "__main__":
     print ne
     mean_ne=np.mean(ne,axis=0)
     print mean_ne
+
