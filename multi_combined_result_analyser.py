@@ -77,12 +77,18 @@ def plot():
 
 
 
-dsts=["handson3","demo","handson2"]
-eks=[['views', 'comments'],['edits', 'comments'],['views', 'tools'],['edits','tools'], ["comments","tools"],['views', 'edits']]
+dsts=["handson3"]#,"demo"]#,"handson2"]
+dsts2=["demo","handson2"]
+eks=[['views', 'comments'],['edits', 'comments'],['views', 'tools'],['views', 'edits']]#['edits','tools'], ["comments","tools"],
 
 def find_pairs(ek1,ek2):
     ek=[ek1,ek2]
     for ds in dsts:
+        find(event_kinds=ek,dataset_name=ds)
+
+def find_pairs2(ek1,ek2):
+    ek=[ek1,ek2]
+    for ds in dsts2:
         find(event_kinds=ek,dataset_name=ds)
 
 jobs=[]
@@ -90,4 +96,9 @@ for ek in eks:
     p=mtp.Process(target=find_pairs, args=(ek[0],ek[1]))
     jobs.append(p)
     p.start()
+
+    p=mtp.Process(target=find_pairs2, args=(ek[0],ek[1]))
+    jobs.append(p)
+    p.start()
+
 
